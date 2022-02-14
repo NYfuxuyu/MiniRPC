@@ -1,6 +1,7 @@
-package com.fuxuyu.rpc.server;
+package com.fuxuyu.rpc.socket.server;
 
 
+import com.fuxuyu.rpc.RpcServer;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import java.util.concurrent.*;
  * @version 1.0
  * @date 2022/2/5 17:54
  */
-public class RpcServer {
+public class SocketServer implements RpcServer {
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAXIMUM_POOL_SIZE = 50;
     private static final int KEEP_ALIVE_TIME = 60;
@@ -26,10 +27,10 @@ public class RpcServer {
     private RequestHandler requestHandler = new RequestHandler();
     private final ServiceRegistry serviceRegistry;
 
-    private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
 
-    public RpcServer(ServiceRegistry serviceRegistry) {
+    public SocketServer(ServiceRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
         /**
          * 设置上限为100个线程的阻塞队列
@@ -40,7 +41,7 @@ public class RpcServer {
         threadPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, workingQueue, threadFactory);
 
     }
-
+@Override
     public void start(int port){
         try(ServerSocket serverSocket = new ServerSocket(port)){
             logger.info("服务器启动……");

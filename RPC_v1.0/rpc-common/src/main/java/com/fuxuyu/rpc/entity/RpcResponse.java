@@ -2,6 +2,7 @@ package com.fuxuyu.rpc.entity;
 
 import com.fuxuyu.rpc.enumeration.ResponseCode;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @date 2022/2/5 12:04
  */
 @Data
+@NoArgsConstructor
 public class RpcResponse<T> implements Serializable {
     /**
      *响应状态码

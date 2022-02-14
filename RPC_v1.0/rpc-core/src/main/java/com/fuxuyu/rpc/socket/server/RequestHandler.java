@@ -1,4 +1,4 @@
-package com.fuxuyu.rpc.server;
+package com.fuxuyu.rpc.socket.server;
 
 import com.fuxuyu.rpc.entity.RpcRequest;
 

@@ -3,6 +3,7 @@ package com.fuxuyu.rpc.api;
 import com.oracle.webservices.internal.api.databinding.DatabindingMode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class HelloObject implements Serializable {
     //Serializable序列化接口没有任何方法或者字段，只是用于标识可序列化的语义。
     //实现了Serializable接口的类可以被ObjectOutputStream转换为字节流。

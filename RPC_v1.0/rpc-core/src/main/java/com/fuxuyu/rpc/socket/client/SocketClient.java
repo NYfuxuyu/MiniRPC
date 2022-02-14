@@ -1,5 +1,6 @@
-package com.fuxuyu.rpc.client;
+package com.fuxuyu.rpc.socket.client;
 
+import com.fuxuyu.rpc.RpcClient;
 import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.entity.RpcResponse;
 import com.fuxuyu.rpc.enumeration.ResponseCode;
@@ -19,10 +20,17 @@ import java.net.Socket;
  * @version 1.0
  * @date 2022/2/5 15:14
  */
-public class RpcClient {
-    private static final Logger logger = LoggerFactory.getLogger(RpcClient.class);
+public class SocketClient implements RpcClient {
+    private static final Logger logger = LoggerFactory.getLogger(SocketClient.class);
+    private final String host;
+    private final int port;
 
-    public Object sendRequest(RpcRequest rpcRequest, String host, Integer port)  {
+    public SocketClient(String host, int port){
+        this.host = host;
+        this.port = port;
+    }
+    @Override
+    public Object sendRequest(RpcRequest rpcRequest)  {
 /**
  * socket套接字实现TCP网络传输
  * try()中一般放对资源的申请，若{}出现异常，()资源会自动关闭
@@ -50,4 +58,5 @@ public class RpcClient {
         }
 
     }
+
 }

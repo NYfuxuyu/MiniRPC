@@ -36,7 +36,7 @@ public class SocketServer implements RpcServer {
         /**
          * 设置上限为100个线程的阻塞队列
          */
-        BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(100);
+        BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
 
         threadPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, workingQueue, threadFactory);

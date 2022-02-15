@@ -5,6 +5,7 @@ import com.fuxuyu.rpc.codec.CommonDecoder;
 import com.fuxuyu.rpc.codec.CommonEncoder;
 import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.entity.RpcResponse;
+import com.fuxuyu.rpc.serializer.HessianSerializer;
 import com.fuxuyu.rpc.serializer.JsonSerializer;
 import com.fuxuyu.rpc.serializer.KryoSerializer;
 import io.netty.bootstrap.Bootstrap;

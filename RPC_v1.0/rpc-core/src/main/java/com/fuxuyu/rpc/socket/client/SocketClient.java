@@ -9,6 +9,7 @@ import com.fuxuyu.rpc.exception.RpcException;
 import com.fuxuyu.rpc.serializer.CommonSerializer;
 import com.fuxuyu.rpc.socket.util.ObjectReader;
 import com.fuxuyu.rpc.socket.util.ObjectWriter;
+import com.fuxuyu.rpc.util.RpcMessageChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,14 +47,15 @@ public class SocketClient implements RpcClient {
             ObjectWriter.writeObject(outputStream, rpcRequest, serializer);
             Object obj = ObjectReader.readObject(inputStream);
             RpcResponse rpcResponse = (RpcResponse) obj;
-            if(rpcResponse == null){
+            /*if(rpcResponse == null){
                 logger.error("服务调用失败，service:" + rpcRequest.getInterfaceName());
                 throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE, "service:" + rpcRequest.getInterfaceName());
             }
             if(rpcResponse.getStatusCode() == null || rpcResponse.getStatusCode() != ResponseCode.SUCCESS.getCode()){
                 logger.error("服务调用失败，service:{} response:{}", rpcRequest.getInterfaceName(), rpcResponse);
                 throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE, "service:" + rpcRequest.getInterfaceName());
-            }
+            }*/
+            RpcMessageChecker.check(rpcRequest, rpcResponse);
             return rpcResponse.getData();
 
         } catch (IOException  e) {

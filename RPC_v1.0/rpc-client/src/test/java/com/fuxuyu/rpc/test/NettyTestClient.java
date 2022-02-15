@@ -7,6 +7,7 @@ import com.fuxuyu.rpc.api.HelloService;
 import com.fuxuyu.rpc.netty.client.NettyClient;
 import com.fuxuyu.rpc.serializer.HessianSerializer;
 import com.fuxuyu.rpc.serializer.KryoSerializer;
+import com.fuxuyu.rpc.serializer.ProtostuffSerializer;
 
 /**
  * @author Xuyu Fu
@@ -16,7 +17,7 @@ import com.fuxuyu.rpc.serializer.KryoSerializer;
 public class NettyTestClient {
     public static void main(String[] args) {
         RpcClient client = new NettyClient("127.0.0.1", 9999);
-        client.setSerializer(new HessianSerializer());
+        client.setSerializer(new ProtostuffSerializer());
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(1212, "this is netty style");

@@ -6,6 +6,7 @@ import com.fuxuyu.rpc.registry.DefaultServiceRegistry;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
 import com.fuxuyu.rpc.serializer.HessianSerializer;
 import com.fuxuyu.rpc.serializer.KryoSerializer;
+import com.fuxuyu.rpc.serializer.ProtostuffSerializer;
 
 /**
  * @author Xuyu Fu
@@ -19,7 +20,7 @@ public class NettyTestServer {
         ServiceRegistry registry = new DefaultServiceRegistry();
         registry.register(helloService);
         NettyServer server = new NettyServer();
-        server.setSerializer(new HessianSerializer());
+        server.setSerializer(new ProtostuffSerializer());
         server.start(9999);
     }
 }

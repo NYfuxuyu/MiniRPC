@@ -6,6 +6,7 @@ import com.fuxuyu.rpc.api.HelloService;
 
 import com.fuxuyu.rpc.serializer.HessianSerializer;
 import com.fuxuyu.rpc.serializer.KryoSerializer;
+import com.fuxuyu.rpc.serializer.ProtostuffSerializer;
 import com.fuxuyu.rpc.socket.client.SocketClient;
 
 /**
@@ -16,10 +17,10 @@ import com.fuxuyu.rpc.socket.client.SocketClient;
 public class SocketTestClient {
     public static void main(String[] args) {
         SocketClient client = new SocketClient("127.0.0.1", 9000);
-        client.setSerializer(new HessianSerializer());
+        client.setSerializer(new ProtostuffSerializer());
         RpcClientProxy proxy = new RpcClientProxy(client);
         HelloService helloService = proxy.getProxy(HelloService.class);
-        HelloObject helloObject = new HelloObject(205333, "hello Rpc_v1.0");
+        HelloObject helloObject = new HelloObject(205326, "hello Rpc_v1.0");
         String res = helloService.Hello(helloObject);
         System.out.println(res);
     }

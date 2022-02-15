@@ -1,5 +1,7 @@
 package com.fuxuyu.rpc;
 
+import com.fuxuyu.rpc.serializer.CommonSerializer;
+
 /**
  * @author Xuyu Fu
  * @version 1.0
@@ -8,5 +10,5 @@ package com.fuxuyu.rpc;
 public interface RpcServer {
 
     void start(int port);
-
+    void setSerializer(CommonSerializer serializer);
 }

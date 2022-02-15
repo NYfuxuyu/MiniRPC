@@ -1,6 +1,7 @@
 package com.fuxuyu.rpc;
 
 import com.fuxuyu.rpc.entity.RpcRequest;
+import com.fuxuyu.rpc.serializer.CommonSerializer;
 
 /**
  * @author Xuyu Fu
@@ -9,4 +10,5 @@ import com.fuxuyu.rpc.entity.RpcRequest;
  */
 public interface RpcClient {
     Object sendRequest(RpcRequest rpcRequest);
+    void setSerializer(CommonSerializer serializer);
 }

@@ -4,6 +4,9 @@ package com.fuxuyu.rpc.netty.server;
 import com.fuxuyu.rpc.RpcServer;
 import com.fuxuyu.rpc.codec.CommonDecoder;
 import com.fuxuyu.rpc.codec.CommonEncoder;
+import com.fuxuyu.rpc.enumeration.RpcError;
+import com.fuxuyu.rpc.exception.RpcException;
+import com.fuxuyu.rpc.serializer.CommonSerializer;
 import com.fuxuyu.rpc.serializer.HessianSerializer;
 import com.fuxuyu.rpc.serializer.JsonSerializer;
 import com.fuxuyu.rpc.serializer.KryoSerializer;
@@ -24,9 +27,13 @@ import org.slf4j.LoggerFactory;
  */
 public class NettyServer implements RpcServer {
     public static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
-
+    private CommonSerializer serializer;
     @Override
     public void start(int port) {
+        if (serializer == null) {
+            logger.error("未设置序列化器");
+            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+        }
         //用来处理客户端连接的主线程池
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         //用于连接后处理IO事件的从线程池
@@ -51,7 +58,7 @@ public class NettyServer implements RpcServer {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             //初始化管道
                             ChannelPipeline pipeline = socketChannel.pipeline();
-                            pipeline.addLast(new CommonEncoder(new KryoSerializer()))
+                            pipeline.addLast(new CommonEncoder(serializer))
                                     .addLast(new CommonDecoder())
                                     .addLast(new NettyServerHandler());
 
@@ -71,5 +78,10 @@ public class NettyServer implements RpcServer {
         }
 
 
+    }
+
+    @Override
+    public void setSerializer(CommonSerializer serializer) {
+        this.serializer = serializer;
     }
 }

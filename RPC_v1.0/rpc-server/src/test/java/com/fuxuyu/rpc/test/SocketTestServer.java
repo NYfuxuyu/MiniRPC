@@ -3,6 +3,8 @@ package com.fuxuyu.rpc.test;
 import com.fuxuyu.rpc.api.HelloService;
 import com.fuxuyu.rpc.registry.DefaultServiceRegistry;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
+import com.fuxuyu.rpc.serializer.HessianSerializer;
+import com.fuxuyu.rpc.serializer.KryoSerializer;
 import com.fuxuyu.rpc.socket.server.SocketServer;
 
 /**
@@ -21,6 +23,7 @@ public class SocketTestServer {
         //将服务容器纳入到服务端
         SocketServer socketServer = new SocketServer(serviceRegistry);
         //启动服务端
+        socketServer.setSerializer(new HessianSerializer());
         socketServer.start(9000);
 
     }

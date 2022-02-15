@@ -3,7 +3,10 @@ package com.fuxuyu.rpc.socket.server;
 
 import com.fuxuyu.rpc.RequestHandler;
 import com.fuxuyu.rpc.RpcServer;
+import com.fuxuyu.rpc.enumeration.RpcError;
+import com.fuxuyu.rpc.exception.RpcException;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
+import com.fuxuyu.rpc.serializer.CommonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +32,7 @@ public class SocketServer implements RpcServer {
     private final ServiceRegistry serviceRegistry;
 
     private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
-
+    private CommonSerializer serializer;
 
     public SocketServer(ServiceRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
@@ -44,17 +47,26 @@ public class SocketServer implements RpcServer {
     }
 @Override
     public void start(int port){
+    if (serializer == null){
+        logger.error("未设置序列化器");
+        throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+    }
         try(ServerSocket serverSocket = new ServerSocket(port)){
             logger.info("服务器启动……");
             Socket socket;
             //当未接收到连接请求时，accept()会一直阻塞
             while ((socket = serverSocket.accept()) != null){
                 logger.info("客户端连接！{}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serviceRegistry));
+                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serviceRegistry, serializer));
             }
             threadPool.shutdown();
         }catch (IOException e){
             logger.info("服务器启动时有错误发生：" + e);
         }
+    }
+
+    @Override
+    public void setSerializer(CommonSerializer serializer) {
+        this.serializer = serializer;
     }
 }

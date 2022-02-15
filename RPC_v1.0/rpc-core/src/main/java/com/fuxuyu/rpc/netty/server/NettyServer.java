@@ -5,6 +5,7 @@ import com.fuxuyu.rpc.RpcServer;
 import com.fuxuyu.rpc.codec.CommonDecoder;
 import com.fuxuyu.rpc.codec.CommonEncoder;
 import com.fuxuyu.rpc.serializer.JsonSerializer;
+import com.fuxuyu.rpc.serializer.KryoSerializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -49,7 +50,7 @@ public class NettyServer implements RpcServer {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             //初始化管道
                             ChannelPipeline pipeline = socketChannel.pipeline();
-                            pipeline.addLast(new CommonEncoder(new JsonSerializer()))
+                            pipeline.addLast(new CommonEncoder(new KryoSerializer()))
                                     .addLast(new CommonDecoder())
                                     .addLast(new NettyServerHandler());
 

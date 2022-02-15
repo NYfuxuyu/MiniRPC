@@ -2,7 +2,7 @@ package com.fuxuyu.rpc.registry;
 
 
 import com.fuxuyu.rpc.enumeration.RpcError;
-import com.fuxuyu.rpc.enumeration.RpcException;
+import com.fuxuyu.rpc.exception.RpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

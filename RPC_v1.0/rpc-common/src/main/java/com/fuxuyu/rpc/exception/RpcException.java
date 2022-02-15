@@ -1,4 +1,6 @@
-package com.fuxuyu.rpc.enumeration;
+package com.fuxuyu.rpc.exception;
+
+import com.fuxuyu.rpc.enumeration.RpcError;
 
 /**
  * @author Xuyu Fu

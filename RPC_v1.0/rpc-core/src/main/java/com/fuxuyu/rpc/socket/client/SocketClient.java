@@ -5,7 +5,7 @@ import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.entity.RpcResponse;
 import com.fuxuyu.rpc.enumeration.ResponseCode;
 import com.fuxuyu.rpc.enumeration.RpcError;
-import com.fuxuyu.rpc.enumeration.RpcException;
+import com.fuxuyu.rpc.exception.RpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

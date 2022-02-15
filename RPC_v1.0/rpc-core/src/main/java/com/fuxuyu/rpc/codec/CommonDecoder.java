@@ -4,7 +4,7 @@ import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.entity.RpcResponse;
 import com.fuxuyu.rpc.enumeration.PackageType;
 import com.fuxuyu.rpc.enumeration.RpcError;
-import com.fuxuyu.rpc.enumeration.RpcException;
+import com.fuxuyu.rpc.exception.RpcException;
 import com.fuxuyu.rpc.serializer.CommonSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

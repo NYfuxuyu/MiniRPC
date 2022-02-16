@@ -2,8 +2,7 @@ package com.fuxuyu.rpc.test;
 
 import com.fuxuyu.rpc.api.HelloService;
 import com.fuxuyu.rpc.transport.netty.server.NettyServer;
-import com.fuxuyu.rpc.Provider.ServiceProviderImpl;
-import com.fuxuyu.rpc.registry.ServiceRegistry;
+
 import com.fuxuyu.rpc.serializer.impl.ProtostuffSerializer;
 
 /**

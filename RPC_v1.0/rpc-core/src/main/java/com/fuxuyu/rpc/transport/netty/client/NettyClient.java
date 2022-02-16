@@ -1,6 +1,8 @@
 package com.fuxuyu.rpc.transport.netty.client;
 
+import com.fuxuyu.rpc.registry.NacosServiceDiscovery;
 import com.fuxuyu.rpc.registry.NacosServiceRegistry;
+import com.fuxuyu.rpc.registry.ServiceDiscovery;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
 import com.fuxuyu.rpc.transport.RpcClient;
 import com.fuxuyu.rpc.codec.CommonDecoder;
@@ -37,9 +39,9 @@ public class NettyClient implements RpcClient {
     private static final Bootstrap bootstrap;
     private CommonSerializer serializer;
 
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
     public NettyClient(){
-        serviceRegistry = new NacosServiceRegistry();
+        serviceDiscovery = new NacosServiceDiscovery();
     }
 
     static {
@@ -60,7 +62,7 @@ public class NettyClient implements RpcClient {
         AtomicReference<Object> result = new AtomicReference<>(null);
         try {
             //从Nacos获取提供对应服务的服务端地址
-            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
             //创建Netty通道连接
             Channel channel = ChannelProvider.get(inetSocketAddress, serializer);
             if(channel.isActive()) {
@@ -80,6 +82,7 @@ public class NettyClient implements RpcClient {
                 RpcMessageChecker.check(rpcRequest, rpcResponse);
                 result.set(rpcResponse.getData());
             }else {
+                channel.close();
                 //0表示”正常“退出程序，即如果当前程序还有在执行的任务，则等待所有任务执行完成以后再退出
                 System.exit(0);
             }

@@ -5,6 +5,7 @@ import com.fuxuyu.rpc.Provider.ServiceProvider;
 import com.fuxuyu.rpc.Provider.ServiceProviderImpl;
 import com.fuxuyu.rpc.handler.RequestHandler;
 import com.fuxuyu.rpc.registry.NacosServiceRegistry;
+import com.fuxuyu.rpc.registry.ServiceDiscovery;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
 import com.fuxuyu.rpc.transport.RpcServer;
 import com.fuxuyu.rpc.enumeration.RpcError;
@@ -50,12 +51,12 @@ public class SocketServer implements RpcServer {
         //创建线程池
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
     }
-    public <T> void publishService(Object service, Class<T> serviceClass) {
+    public <T> void publishService(T service, Class<T> serviceClass) {
         if (serializer == null){
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
-        serviceProvider.addServiceProvider(service);
+        serviceProvider.addServiceProvider(service, serviceClass);
         serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
         start();
     }

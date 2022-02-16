@@ -3,6 +3,7 @@ package com.fuxuyu.rpc.registry;
 import java.net.InetSocketAddress;
 
 /**
+ * 服务注册接口
  * @author Xuyu Fu
  * @version 1.0
  * @date 2022/2/16 14:16
@@ -15,10 +16,5 @@ public interface ServiceRegistry{
      */
     void register(String serviceName, InetSocketAddress inetSocketAddress);
 
-    /**
-     * 根据服务名查找服务端地址
-     * @param serviceName
-     * @return
-     */
-    InetSocketAddress lookupService(String serviceName);
+
 }

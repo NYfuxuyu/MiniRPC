@@ -1,6 +1,8 @@
 package com.fuxuyu.rpc.transport.socket.client;
 
+import com.fuxuyu.rpc.registry.NacosServiceDiscovery;
 import com.fuxuyu.rpc.registry.NacosServiceRegistry;
+import com.fuxuyu.rpc.registry.ServiceDiscovery;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
 import com.fuxuyu.rpc.transport.RpcClient;
 import com.fuxuyu.rpc.entity.RpcRequest;
@@ -26,12 +28,12 @@ import java.net.Socket;
  */
 public class SocketClient implements RpcClient {
     private static final Logger logger = LoggerFactory.getLogger(SocketClient.class);
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     private CommonSerializer serializer;
 
     public SocketClient() {
-        serviceRegistry = new NacosServiceRegistry();
+        serviceDiscovery = new NacosServiceDiscovery();
     }
 
     @Override
@@ -41,7 +43,7 @@ public class SocketClient implements RpcClient {
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
         //从Nacos获取提供对应服务的服务端地址
-        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
 
 /**
  * socket套接字实现TCP网络传输

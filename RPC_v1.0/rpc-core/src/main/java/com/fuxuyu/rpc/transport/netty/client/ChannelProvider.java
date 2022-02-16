@@ -1,4 +1,4 @@
-package com.fuxuyu.rpc.netty.client;
+package com.fuxuyu.rpc.transport.netty.client;
 
 import com.fuxuyu.rpc.codec.CommonDecoder;
 import com.fuxuyu.rpc.codec.CommonEncoder;

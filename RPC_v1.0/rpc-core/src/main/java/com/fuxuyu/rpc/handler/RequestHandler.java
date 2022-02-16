@@ -1,5 +1,7 @@
-package com.fuxuyu.rpc;
+package com.fuxuyu.rpc.handler;
 
+import com.fuxuyu.rpc.Provider.ServiceProvider;
+import com.fuxuyu.rpc.Provider.ServiceProviderImpl;
 import com.fuxuyu.rpc.entity.RpcRequest;
 
 import com.fuxuyu.rpc.entity.RpcResponse;
@@ -18,15 +20,22 @@ import java.lang.reflect.Method;
  */
 public class RequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-
-    public Object handle(RpcRequest rpcRequest, Object service) {
+    private static final ServiceProvider serviceProvider;
+    static {
+        serviceProvider = new ServiceProviderImpl();
+    }
+    public Object handle(RpcRequest rpcRequest){
         Object result = null;
+        //从服务端本地注册表中获取服务实体
+        Object service = serviceProvider.getServiceProvider(rpcRequest.getInterfaceName());
+
         try {
             result = invokeTargetMethod(rpcRequest, service);
             logger.info("服务：{}成功调用方法：{}", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
         } catch (IllegalAccessException | InvocationTargetException e) {
             logger.info("调用或发送时有错误发生：" + e);
         }
+        //方法调用成功
         return RpcResponse.success(result, rpcRequest.getRequestId());
     }
 

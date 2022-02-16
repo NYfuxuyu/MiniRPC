@@ -1,4 +1,4 @@
-package com.fuxuyu.rpc.socket.util;
+package com.fuxuyu.rpc.transport.socket.util;
 
 import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.enumeration.PackageType;

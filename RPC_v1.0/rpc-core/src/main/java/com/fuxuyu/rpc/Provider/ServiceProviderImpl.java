@@ -1,8 +1,9 @@
-package com.fuxuyu.rpc.registry;
+package com.fuxuyu.rpc.Provider;
 
 
 import com.fuxuyu.rpc.enumeration.RpcError;
 import com.fuxuyu.rpc.exception.RpcException;
+import com.fuxuyu.rpc.registry.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  * @date 2022/2/7 18:25
  */
-public class DefaultServiceRegistry implements ServiceRegistry {
-    private static final Logger logger = LoggerFactory.getLogger(DefaultServiceRegistry.class);
+public class ServiceProviderImpl implements ServiceProvider {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceProviderImpl.class);
 
     /**
      * key = 服务名称(即接口名), value = 服务实体(即实现类的实例对象)
@@ -29,7 +30,7 @@ public class DefaultServiceRegistry implements ServiceRegistry {
 
 
     @Override
-    public synchronized  <T> void register(T service) {
+    public synchronized  <T> void addServiceProvider(T service) {
         String serviceImplName  = service.getClass().getCanonicalName();
          if (registeredService.contains((serviceImplName))) {
              return;
@@ -47,11 +48,12 @@ public class DefaultServiceRegistry implements ServiceRegistry {
     }
 
     @Override
-    public Object getService(String serviceName) {
+    public Object getServiceProvider(String serviceName) {
         Object service = serviceMap.get(serviceName);
         if(service == null) {
             throw  new RpcException(RpcError.SERVICE_NOT_FOUND);
         }
         return service;
     }
+
 }

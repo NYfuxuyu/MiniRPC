@@ -1,9 +1,10 @@
-package com.fuxuyu.rpc.serializer;
+package com.fuxuyu.rpc.serializer.impl;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
 import com.fuxuyu.rpc.enumeration.SerializerCode;
 import com.fuxuyu.rpc.exception.SerializeException;
+import com.fuxuyu.rpc.serializer.CommonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ import java.io.IOException;
  * @version 1.0
  * @date 2022/2/15 10:43
  */
-public class HessianSerializer implements CommonSerializer{
+public class HessianSerializer implements CommonSerializer {
     private static final Logger logger = LoggerFactory.getLogger(HessianSerializer.class);
     @Override
     public byte[] serialize(Object obj) {

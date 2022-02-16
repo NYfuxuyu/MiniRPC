@@ -1,4 +1,4 @@
-package com.fuxuyu.rpc.serializer;
+package com.fuxuyu.rpc.serializer.impl;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -7,6 +7,7 @@ import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.entity.RpcResponse;
 import com.fuxuyu.rpc.enumeration.SerializerCode;
 import com.fuxuyu.rpc.exception.SerializeException;
+import com.fuxuyu.rpc.serializer.CommonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

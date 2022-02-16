@@ -1,9 +1,10 @@
-package com.fuxuyu.rpc.serializer;
+package com.fuxuyu.rpc.serializer.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.enumeration.SerializerCode;
+import com.fuxuyu.rpc.serializer.CommonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ import java.io.IOException;
  * @version 1.0
  * @date 2022/2/14 22:10
  */
-public class JsonSerializer implements CommonSerializer{
+public class JsonSerializer implements CommonSerializer {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonSerializer.class);
 

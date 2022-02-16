@@ -1,13 +1,11 @@
 package com.fuxuyu.rpc.test;
 
-import com.fuxuyu.rpc.RpcClientProxy;
+import com.fuxuyu.rpc.transport.RpcClientProxy;
 import com.fuxuyu.rpc.api.HelloObject;
 import com.fuxuyu.rpc.api.HelloService;
 
-import com.fuxuyu.rpc.serializer.HessianSerializer;
-import com.fuxuyu.rpc.serializer.KryoSerializer;
-import com.fuxuyu.rpc.serializer.ProtostuffSerializer;
-import com.fuxuyu.rpc.socket.client.SocketClient;
+import com.fuxuyu.rpc.serializer.impl.ProtostuffSerializer;
+import com.fuxuyu.rpc.transport.socket.client.SocketClient;
 
 /**
  * @author Xuyu Fu
@@ -16,7 +14,7 @@ import com.fuxuyu.rpc.socket.client.SocketClient;
  */
 public class SocketTestClient {
     public static void main(String[] args) {
-        SocketClient client = new SocketClient("127.0.0.1", 9000);
+        SocketClient client = new SocketClient();
         client.setSerializer(new ProtostuffSerializer());
         RpcClientProxy proxy = new RpcClientProxy(client);
         HelloService helloService = proxy.getProxy(HelloService.class);

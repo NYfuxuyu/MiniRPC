@@ -1,12 +1,10 @@
 package com.fuxuyu.rpc.test;
 
 import com.fuxuyu.rpc.api.HelloService;
-import com.fuxuyu.rpc.registry.DefaultServiceRegistry;
-import com.fuxuyu.rpc.registry.ServiceRegistry;
-import com.fuxuyu.rpc.serializer.HessianSerializer;
-import com.fuxuyu.rpc.serializer.KryoSerializer;
-import com.fuxuyu.rpc.serializer.ProtostuffSerializer;
-import com.fuxuyu.rpc.socket.server.SocketServer;
+import com.fuxuyu.rpc.Provider.ServiceProviderImpl;
+import com.fuxuyu.rpc.serializer.impl.HessianSerializer;
+import com.fuxuyu.rpc.serializer.impl.ProtostuffSerializer;
+import com.fuxuyu.rpc.transport.socket.server.SocketServer;
 
 /**
  * @author Xuyu Fu
@@ -15,17 +13,10 @@ import com.fuxuyu.rpc.socket.server.SocketServer;
  */
 public class SocketTestServer {
     public static void main(String[] args) {
-        //创建服务对象
         HelloService helloService = new HelloServiceImpl();
-        //创建服务容器
-        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
-        //注册服务对象到服务容器中
-        serviceRegistry.register(helloService);
-        //将服务容器纳入到服务端
-        SocketServer socketServer = new SocketServer(serviceRegistry);
-        //启动服务端
+        SocketServer socketServer = new SocketServer("127.0.0.1", 9998);
         socketServer.setSerializer(new ProtostuffSerializer());
-        socketServer.start(9000);
+        socketServer.publishService(helloService, HelloService.class);
 
     }
 }

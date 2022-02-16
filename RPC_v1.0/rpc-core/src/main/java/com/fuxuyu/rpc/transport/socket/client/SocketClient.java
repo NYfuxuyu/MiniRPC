@@ -1,20 +1,22 @@
-package com.fuxuyu.rpc.socket.client;
+package com.fuxuyu.rpc.transport.socket.client;
 
-import com.fuxuyu.rpc.RpcClient;
+import com.fuxuyu.rpc.registry.NacosServiceRegistry;
+import com.fuxuyu.rpc.registry.ServiceRegistry;
+import com.fuxuyu.rpc.transport.RpcClient;
 import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.entity.RpcResponse;
-import com.fuxuyu.rpc.enumeration.ResponseCode;
 import com.fuxuyu.rpc.enumeration.RpcError;
 import com.fuxuyu.rpc.exception.RpcException;
 import com.fuxuyu.rpc.serializer.CommonSerializer;
-import com.fuxuyu.rpc.socket.util.ObjectReader;
-import com.fuxuyu.rpc.socket.util.ObjectWriter;
+import com.fuxuyu.rpc.transport.socket.util.ObjectReader;
+import com.fuxuyu.rpc.transport.socket.util.ObjectWriter;
 import com.fuxuyu.rpc.util.RpcMessageChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -24,24 +26,29 @@ import java.net.Socket;
  */
 public class SocketClient implements RpcClient {
     private static final Logger logger = LoggerFactory.getLogger(SocketClient.class);
-    private final String host;
-    private final int port;
+    private final ServiceRegistry serviceRegistry;
+
     private CommonSerializer serializer;
-    public SocketClient(String host, int port){
-        this.host = host;
-        this.port = port;
+
+    public SocketClient() {
+        serviceRegistry = new NacosServiceRegistry();
     }
+
     @Override
     public Object sendRequest(RpcRequest rpcRequest)  {
         if (serializer == null) {
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
+        //从Nacos获取提供对应服务的服务端地址
+        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+
 /**
  * socket套接字实现TCP网络传输
  * try()中一般放对资源的申请，若{}出现异常，()资源会自动关闭
  */
-        try (Socket socket = new Socket(host, port)) {
+        try (Socket socket = new Socket()) {
+            socket.connect(inetSocketAddress);
             OutputStream outputStream = socket.getOutputStream();
             InputStream inputStream = socket.getInputStream();
             ObjectWriter.writeObject(outputStream, rpcRequest, serializer);

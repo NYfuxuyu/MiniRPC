@@ -1,11 +1,14 @@
-package com.fuxuyu.rpc.socket.server;
+package com.fuxuyu.rpc.transport.socket.server;
 
 
-import com.fuxuyu.rpc.RequestHandler;
-import com.fuxuyu.rpc.RpcServer;
+import com.fuxuyu.rpc.Provider.ServiceProvider;
+import com.fuxuyu.rpc.Provider.ServiceProviderImpl;
+import com.fuxuyu.rpc.handler.RequestHandler;
+import com.fuxuyu.rpc.registry.NacosServiceRegistry;
+import com.fuxuyu.rpc.registry.ServiceRegistry;
+import com.fuxuyu.rpc.transport.RpcServer;
 import com.fuxuyu.rpc.enumeration.RpcError;
 import com.fuxuyu.rpc.exception.RpcException;
-import com.fuxuyu.rpc.registry.ServiceRegistry;
 import com.fuxuyu.rpc.serializer.CommonSerializer;
 import com.fuxuyu.rpc.util.ThreadPoolFactory;
 import org.slf4j.Logger;
@@ -13,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
@@ -31,23 +35,32 @@ public class SocketServer implements RpcServer {
     private final ExecutorService threadPool;
     private RequestHandler requestHandler = new RequestHandler();
     private final ServiceRegistry serviceRegistry;
+    private final ServiceProvider serviceProvider;
 
+    private final String host;
+    private final int port;
     private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
     private CommonSerializer serializer;
 
-    public SocketServer(ServiceRegistry serviceRegistry) {
-        this.serviceRegistry = serviceRegistry;
-        /**
-         * 设置上限为100个线程的阻塞队列
-         *//*
-        BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
-        ThreadFactory threadFactory = Executors.defaultThreadFactory();
-*/
+    public SocketServer(String host, int port){
+        this.host = host;
+        this.port = port;
+        serviceRegistry = new NacosServiceRegistry();
+        serviceProvider = new ServiceProviderImpl();
+        //创建线程池
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
-
+    }
+    public <T> void publishService(Object service, Class<T> serviceClass) {
+        if (serializer == null){
+            logger.error("未设置序列化器");
+            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+        }
+        serviceProvider.addServiceProvider(service);
+        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
+        start();
     }
 @Override
-    public void start(int port){
+    public void start(){
     if (serializer == null){
         logger.error("未设置序列化器");
         throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
@@ -58,7 +71,7 @@ public class SocketServer implements RpcServer {
             //当未接收到连接请求时，accept()会一直阻塞
             while ((socket = serverSocket.accept()) != null){
                 logger.info("客户端连接！{}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serviceRegistry, serializer));
+                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serializer));
             }
             threadPool.shutdown();
         }catch (IOException e){

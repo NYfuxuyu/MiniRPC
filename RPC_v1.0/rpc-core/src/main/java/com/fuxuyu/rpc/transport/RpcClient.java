@@ -1,4 +1,4 @@
-package com.fuxuyu.rpc;
+package com.fuxuyu.rpc.transport;
 
 import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.serializer.CommonSerializer;

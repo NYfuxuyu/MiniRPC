@@ -1,12 +1,10 @@
 package com.fuxuyu.rpc.test;
 
 import com.fuxuyu.rpc.api.HelloService;
-import com.fuxuyu.rpc.netty.server.NettyServer;
-import com.fuxuyu.rpc.registry.DefaultServiceRegistry;
+import com.fuxuyu.rpc.transport.netty.server.NettyServer;
+import com.fuxuyu.rpc.Provider.ServiceProviderImpl;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
-import com.fuxuyu.rpc.serializer.HessianSerializer;
-import com.fuxuyu.rpc.serializer.KryoSerializer;
-import com.fuxuyu.rpc.serializer.ProtostuffSerializer;
+import com.fuxuyu.rpc.serializer.impl.ProtostuffSerializer;
 
 /**
  * @author Xuyu Fu
@@ -17,10 +15,8 @@ public class NettyTestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
 
-        ServiceRegistry registry = new DefaultServiceRegistry();
-        registry.register(helloService);
-        NettyServer server = new NettyServer();
+        NettyServer server = new NettyServer("127.0.0.1", 9999);
         server.setSerializer(new ProtostuffSerializer());
-        server.start(9999);
+        server.publishService(helloService, HelloService.class);
     }
 }

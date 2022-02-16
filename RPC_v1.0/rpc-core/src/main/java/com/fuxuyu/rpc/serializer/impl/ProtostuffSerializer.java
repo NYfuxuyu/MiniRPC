@@ -1,6 +1,7 @@
-package com.fuxuyu.rpc.serializer;
+package com.fuxuyu.rpc.serializer.impl;
 
 import com.fuxuyu.rpc.enumeration.SerializerCode;
+import com.fuxuyu.rpc.serializer.CommonSerializer;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
@@ -17,7 +18,7 @@ import static io.protostuff.runtime.RuntimeSchema.getSchema;
  * @version 1.0
  * @date 2022/2/15 20:21
  */
-public class ProtostuffSerializer implements CommonSerializer{
+public class ProtostuffSerializer implements CommonSerializer {
     /**
      * 避免每次序列化都重新申请Buffer空间,用来存放对象序列化之后的数据
      * 如果你设置的空间不足，会自动扩展的，但这个大小还是要设置一个合适的值，设置大了浪费空间，设置小了会自动扩展浪费时间

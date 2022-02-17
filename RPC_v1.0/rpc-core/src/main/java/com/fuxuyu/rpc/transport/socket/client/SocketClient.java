@@ -1,5 +1,7 @@
 package com.fuxuyu.rpc.transport.socket.client;
 
+import com.fuxuyu.rpc.loadbalancer.LoadBalancer;
+import com.fuxuyu.rpc.loadbalancer.impl.RandomLoadBalancer;
 import com.fuxuyu.rpc.registry.impl.NacosServiceDiscovery;
 import com.fuxuyu.rpc.registry.ServiceDiscovery;
 import com.fuxuyu.rpc.transport.RpcClient;
@@ -31,11 +33,19 @@ public class SocketClient implements RpcClient {
     private final CommonSerializer serializer;
 
     public SocketClient() {
-        this(DEFAULT_SERIALIZER);
+        this(DEFAULT_SERIALIZER, new RandomLoadBalancer());
     }
 
-    public SocketClient(Integer serializerCode) {
-        serviceDiscovery = new NacosServiceDiscovery();
+    public SocketClient(LoadBalancer loadBalancer){
+        this(DEFAULT_SERIALIZER, loadBalancer);
+    }
+
+    public SocketClient(Integer serializerCode){
+        this(serializerCode, new RandomLoadBalancer());
+    }
+
+    public SocketClient(Integer serializerCode, LoadBalancer loadBalancer) {
+        serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
         serializer = CommonSerializer.getByCode(serializerCode);
     }
 

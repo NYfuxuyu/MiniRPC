@@ -1,6 +1,8 @@
 package com.fuxuyu.rpc.transport.netty.client;
 
 import com.fuxuyu.rpc.factory.SingletonFactory;
+import com.fuxuyu.rpc.loadbalancer.LoadBalancer;
+import com.fuxuyu.rpc.loadbalancer.impl.RandomLoadBalancer;
 import com.fuxuyu.rpc.registry.impl.NacosServiceDiscovery;
 import com.fuxuyu.rpc.registry.ServiceDiscovery;
 import com.fuxuyu.rpc.transport.RpcClient;
@@ -47,11 +49,16 @@ public class NettyClient implements RpcClient {
     private final ServiceDiscovery serviceDiscovery;
     public NettyClient() {
         //以默认序列化器调用构造函数
-        this(DEFAULT_SERIALIZER);
+        this(DEFAULT_SERIALIZER, new RandomLoadBalancer());
     }
-
+    public NettyClient(LoadBalancer loadBalancer){
+        this(DEFAULT_SERIALIZER, loadBalancer);
+    }
     public NettyClient(Integer serializerCode) {
-        serviceDiscovery = new NacosServiceDiscovery();
+        this(serializerCode, new RandomLoadBalancer());
+    }
+    public NettyClient(Integer serializerCode, LoadBalancer loadBalancer){
+        serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
         serializer = CommonSerializer.getByCode(serializerCode);
         unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
     }

@@ -10,7 +10,7 @@ import com.fuxuyu.rpc.serializer.CommonSerializer;
 public interface RpcServer {
 
     void start();
-    void setSerializer(CommonSerializer serializer);
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
 
     /**
      * 像nacos注册服务

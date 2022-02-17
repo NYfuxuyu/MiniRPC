@@ -9,6 +9,8 @@ import com.fuxuyu.rpc.serializer.CommonSerializer;
  * @date 2022/2/12 17:30
  */
 public interface RpcClient {
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
+
     Object sendRequest(RpcRequest rpcRequest);
-    void setSerializer(CommonSerializer serializer);
+
 }

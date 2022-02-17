@@ -19,10 +19,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Xuyu Fu
@@ -31,13 +33,14 @@ import java.net.InetSocketAddress;
  */
 public class NettyServer implements RpcServer {
     public static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
-    private  final CommonSerializer serializer;
+    private final CommonSerializer serializer;
 
     private final String host;
     private final int port;
 
     private final ServiceRegistry serviceRegistry;
     private final ServiceProvider serviceProvider;
+
     public NettyServer(String host, int port) {
         this(host, port, DEFAULT_SERIALIZER);
     }
@@ -52,6 +55,7 @@ public class NettyServer implements RpcServer {
 
     /**
      * 将服务注册保存在本地的注册表然后注册到nacos
+     *
      * @param service
      * @param serviceClass
      * @param <T>
@@ -66,6 +70,7 @@ public class NettyServer implements RpcServer {
         serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
         start();
     }
+
     @Override
     public void start() {
         //添加注销服务的钩子，服务端关闭时才会执行
@@ -94,14 +99,16 @@ public class NettyServer implements RpcServer {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             //初始化管道
                             ChannelPipeline pipeline = socketChannel.pipeline();
-                            pipeline.addLast(new CommonEncoder(serializer))
+                            //设定IdleStateHandler心跳检测每30秒进行一次读检测，如果30秒内ChannelRead()方法未被调用则触发一次userEventTrigger()方法
+                            pipeline.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS))
+                                    .addLast(new CommonEncoder(serializer))
                                     .addLast(new CommonDecoder())
                                     .addLast(new NettyServerHandler());
 
                         }
                     });
             //绑定端口，启动Netty，sync()代表阻塞主Server线程，以执行Netty线程，如果不阻塞Netty就直接被下面shutdown了
-            ChannelFuture future = serverBootstrap.bind(host,port).sync();
+            ChannelFuture future = serverBootstrap.bind(host, port).sync();
 
             //等确定通道关闭了，关闭future回到主Server线程
             future.channel().closeFuture().sync();

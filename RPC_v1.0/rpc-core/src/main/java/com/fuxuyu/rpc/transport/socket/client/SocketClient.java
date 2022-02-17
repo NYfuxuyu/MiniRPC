@@ -1,9 +1,7 @@
 package com.fuxuyu.rpc.transport.socket.client;
 
-import com.fuxuyu.rpc.registry.NacosServiceDiscovery;
-import com.fuxuyu.rpc.registry.NacosServiceRegistry;
+import com.fuxuyu.rpc.registry.impl.NacosServiceDiscovery;
 import com.fuxuyu.rpc.registry.ServiceDiscovery;
-import com.fuxuyu.rpc.registry.ServiceRegistry;
 import com.fuxuyu.rpc.transport.RpcClient;
 import com.fuxuyu.rpc.entity.RpcRequest;
 import com.fuxuyu.rpc.entity.RpcResponse;

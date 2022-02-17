@@ -1,7 +1,7 @@
 package com.fuxuyu.rpc.test;
 
 import com.fuxuyu.rpc.transport.RpcClient;
-import com.fuxuyu.rpc.transport.RpcClientProxy;
+import com.fuxuyu.rpc.transport.proxy.RpcClientProxy;
 import com.fuxuyu.rpc.api.HelloObject;
 import com.fuxuyu.rpc.api.HelloService;
 import com.fuxuyu.rpc.transport.netty.client.NettyClient;

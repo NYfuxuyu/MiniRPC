@@ -1,4 +1,4 @@
-package com.fuxuyu.rpc.Provider;
+package com.fuxuyu.rpc.provider;
 
 /**保存和提供服务实例对象
  * @author Xuyu Fu

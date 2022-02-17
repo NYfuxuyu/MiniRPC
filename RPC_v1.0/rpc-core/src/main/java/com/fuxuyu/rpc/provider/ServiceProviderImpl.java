@@ -1,9 +1,8 @@
-package com.fuxuyu.rpc.Provider;
+package com.fuxuyu.rpc.provider;
 
 
 import com.fuxuyu.rpc.enumeration.RpcError;
 import com.fuxuyu.rpc.exception.RpcException;
-import com.fuxuyu.rpc.registry.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

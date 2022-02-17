@@ -1,8 +1,8 @@
-package com.fuxuyu.rpc.registry;
+package com.fuxuyu.rpc.registry.impl;
 
 import com.alibaba.nacos.api.exception.NacosException;
-import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
+import com.fuxuyu.rpc.registry.ServiceDiscovery;
 import com.fuxuyu.rpc.util.NacosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +16,10 @@ import java.util.List;
  * @description
  * @date 2022/2/16 20:24
  */
-public class NacosServiceDiscovery implements ServiceDiscovery{
+public class NacosServiceDiscovery implements ServiceDiscovery {
 
     private static final Logger logger = LoggerFactory.getLogger(NacosServiceDiscovery.class);
-    private final NamingService namingService;
-    public NacosServiceDiscovery(){
-        namingService = NacosUtil.getNacosNamingService();
-    }
+
 
     /**
      * 根据服务名称从注册中心获取到一个服务提供者的地址
@@ -32,7 +29,7 @@ public class NacosServiceDiscovery implements ServiceDiscovery{
     @Override
     public InetSocketAddress lookupService(String serviceName) {
         try {
-            List<Instance> instances = NacosUtil.getAllInstance(namingService, serviceName);
+            List<Instance> instances = NacosUtil.getAllInstance(serviceName);
             Instance instance = instances.get(0);
             return new InetSocketAddress(instance.getIp(), instance.getPort());
 

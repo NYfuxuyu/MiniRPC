@@ -1,17 +1,17 @@
 package com.fuxuyu.rpc.transport.socket.server;
 
 
-import com.fuxuyu.rpc.Provider.ServiceProvider;
-import com.fuxuyu.rpc.Provider.ServiceProviderImpl;
+import com.fuxuyu.rpc.hook.ShutdownHook;
+import com.fuxuyu.rpc.provider.ServiceProvider;
+import com.fuxuyu.rpc.provider.ServiceProviderImpl;
 import com.fuxuyu.rpc.handler.RequestHandler;
-import com.fuxuyu.rpc.registry.NacosServiceRegistry;
-import com.fuxuyu.rpc.registry.ServiceDiscovery;
+import com.fuxuyu.rpc.registry.impl.NacosServiceRegistry;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
 import com.fuxuyu.rpc.transport.RpcServer;
 import com.fuxuyu.rpc.enumeration.RpcError;
 import com.fuxuyu.rpc.exception.RpcException;
 import com.fuxuyu.rpc.serializer.CommonSerializer;
-import com.fuxuyu.rpc.util.ThreadPoolFactory;
+import com.fuxuyu.rpc.factory.ThreadPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,17 +62,16 @@ public class SocketServer implements RpcServer {
     }
 @Override
     public void start(){
-    if (serializer == null){
-        logger.error("未设置序列化器");
-        throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-    }
-        try(ServerSocket serverSocket = new ServerSocket(port)){
+        try(ServerSocket serverSocket = new ServerSocket()){
+            serverSocket.bind(new InetSocketAddress(host, port));
             logger.info("服务器启动……");
+            //添加钩子，服务端关闭时会注销服务
+            ShutdownHook.getShutdownHook().addClearAllHook();
             Socket socket;
             //当未接收到连接请求时，accept()会一直阻塞
             while ((socket = serverSocket.accept()) != null){
                 logger.info("客户端连接！{}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serializer));
+                threadPool.execute(new SocketRequestHandlerThread(socket, requestHandler, serializer));
             }
             threadPool.shutdown();
         }catch (IOException e){

@@ -1,6 +1,7 @@
-package com.fuxuyu.rpc.transport;
+package com.fuxuyu.rpc.transport.proxy;
 
 import com.fuxuyu.rpc.entity.RpcRequest;
+import com.fuxuyu.rpc.transport.RpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

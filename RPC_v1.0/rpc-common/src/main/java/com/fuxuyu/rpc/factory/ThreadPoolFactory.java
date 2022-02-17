@@ -1,4 +1,4 @@
-package com.fuxuyu.rpc.util;
+package com.fuxuyu.rpc.factory;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.NoArgsConstructor;

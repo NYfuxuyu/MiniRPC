@@ -1,8 +1,6 @@
 package com.fuxuyu.rpc.test;
 
 import com.fuxuyu.rpc.api.HelloService;
-import com.fuxuyu.rpc.Provider.ServiceProviderImpl;
-import com.fuxuyu.rpc.serializer.impl.HessianSerializer;
 import com.fuxuyu.rpc.serializer.impl.ProtostuffSerializer;
 import com.fuxuyu.rpc.transport.socket.server.SocketServer;
 

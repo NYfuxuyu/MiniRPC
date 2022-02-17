@@ -16,14 +16,14 @@ import java.net.Socket;
  * @version 1.0
  * @date 2022/2/8 22:39
  */
-public class RequestHandlerThread implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandlerThread.class);
+public class SocketRequestHandlerThread implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(SocketRequestHandlerThread.class);
 
     private Socket socket;
     private RequestHandler requestHandler;
 
     private CommonSerializer serializer;
-    public RequestHandlerThread(Socket socket, RequestHandler requestHandler, CommonSerializer serializer) {
+    public SocketRequestHandlerThread(Socket socket, RequestHandler requestHandler, CommonSerializer serializer) {
         this.socket = socket;
         this.requestHandler = requestHandler;
         this.serializer = serializer;

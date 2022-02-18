@@ -7,6 +7,7 @@ import com.fuxuyu.rpc.provider.ServiceProviderImpl;
 import com.fuxuyu.rpc.handler.RequestHandler;
 import com.fuxuyu.rpc.registry.impl.NacosServiceRegistry;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
+import com.fuxuyu.rpc.transport.AbstractRpcServer;
 import com.fuxuyu.rpc.transport.RpcServer;
 import com.fuxuyu.rpc.enumeration.RpcError;
 import com.fuxuyu.rpc.exception.RpcException;
@@ -28,7 +29,8 @@ import java.util.concurrent.*;
  * @version 1.0
  * @date 2022/2/5 17:54
  */
-public class SocketServer implements RpcServer {
+public class SocketServer extends AbstractRpcServer {
+
    /* private static final int CORE_POOL_SIZE = 5;
     private static final int MAXIMUM_POOL_SIZE = 50;
     private static final int KEEP_ALIVE_TIME = 60;
@@ -36,12 +38,7 @@ public class SocketServer implements RpcServer {
     private final ExecutorService threadPool;
     private final CommonSerializer serializer;
     private final RequestHandler requestHandler = new RequestHandler();
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
 
-    private final String host;
-    private final int port;
-    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
     public SocketServer(String host, int port) {
         this(host, port, DEFAULT_SERIALIZER);
@@ -55,16 +52,10 @@ public class SocketServer implements RpcServer {
         serializer = CommonSerializer.getByCode(serializerCode);
         //创建线程池
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
+        //自动注册服务
+        scanServices();
     }
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if (serializer == null){
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service, serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-        start();
-    }
+
 @Override
     public void start(){
         try(ServerSocket serverSocket = new ServerSocket()){

@@ -1,5 +1,6 @@
 package com.fuxuyu.rpc.test;
 
+import com.fuxuyu.rpc.api.ByeService;
 import com.fuxuyu.rpc.serializer.CommonSerializer;
 import com.fuxuyu.rpc.transport.RpcClient;
 import com.fuxuyu.rpc.transport.proxy.RpcClientProxy;
@@ -21,5 +22,7 @@ public class NettyTestClient {
         HelloObject object = new HelloObject(1212, "this is netty style");
         String res = helloService.Hello(object);
         System.out.println(res);
+        ByeService byeService = rpcClientProxy.getProxy(ByeService.class);
+        System.out.println(byeService.bye("Netty"));
     }
 }

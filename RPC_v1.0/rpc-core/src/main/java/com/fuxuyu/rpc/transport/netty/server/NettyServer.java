@@ -6,6 +6,7 @@ import com.fuxuyu.rpc.provider.ServiceProvider;
 import com.fuxuyu.rpc.provider.ServiceProviderImpl;
 import com.fuxuyu.rpc.registry.impl.NacosServiceRegistry;
 import com.fuxuyu.rpc.registry.ServiceRegistry;
+import com.fuxuyu.rpc.transport.AbstractRpcServer;
 import com.fuxuyu.rpc.transport.RpcServer;
 import com.fuxuyu.rpc.codec.CommonDecoder;
 import com.fuxuyu.rpc.codec.CommonEncoder;
@@ -31,15 +32,8 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2022/2/14 18:12
  */
-public class NettyServer implements RpcServer {
-    public static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
+public class NettyServer extends AbstractRpcServer {
     private final CommonSerializer serializer;
-
-    private final String host;
-    private final int port;
-
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
 
     public NettyServer(String host, int port) {
         this(host, port, DEFAULT_SERIALIZER);
@@ -51,6 +45,8 @@ public class NettyServer implements RpcServer {
         serviceRegistry = new NacosServiceRegistry();
         serviceProvider = new ServiceProviderImpl();
         serializer = CommonSerializer.getByCode(serializerCode);
+        //自动注册服务
+        scanServices();
     }
 
     /**
@@ -60,16 +56,6 @@ public class NettyServer implements RpcServer {
      * @param serviceClass
      * @param <T>
      */
-    @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if (serializer == null) {
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service, serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-        start();
-    }
 
     @Override
     public void start() {
